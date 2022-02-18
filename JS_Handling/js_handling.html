@@ -161,7 +161,7 @@
 						} else {
 							obj = '';
 							alert('모든 항목을 입력해야 합니다.');
-							break;
+							return;
 						}
 					}
 				}
@@ -195,6 +195,25 @@
 						td.appendChild(input);
 					}
 				}
+
+				let btnSave = document.querySelector('#Save' + (writtenIdx - 1));
+				btnSave.setAttribute('style', 'display: block; background-color: #2DBF64;');
+				oButton.setAttribute('style', 'display: none;'); //현재 버튼은 숨김
+			}
+
+			// Save 하기 - 변경된 값 저장하기
+			this.Save = (oButton) => {
+				let writtenIdx = oButton.parentNode.parentNode.rowIndex;
+				let trData = document.querySelector('#classTable').rows[writtenIdx];
+
+				//새로 입력된 값으로 myClass 배열 갱신
+				for (let i = 1; i < this.col.length; i++) {
+					let td = trData.querySelectorAll('td')[i];
+					if (td.childNodes[0].getAttribute('type') === 'text' || td.childNodes[0].tagName === 'SELECT') {
+						this.myClass[writtenIdx - 1][this.col[i]] = td.childNodes[0].value; //실제 입력한 값을 myClass에 바로 저장
+					}
+				}
+				this.createTable();
 			}
 		}
 		crudApp.createTable();
