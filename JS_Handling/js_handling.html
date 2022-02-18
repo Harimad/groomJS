@@ -50,7 +50,7 @@
 				}
 
 				let table = document.createElement('table');
-				table.setAttribute('id', 'classtable');
+				table.setAttribute('id', 'classTable');
 
 				let tr = table.insertRow(-1); //-1을 넣으면 table의 마지막 행에 <tr> 요소 추가
 
@@ -141,6 +141,32 @@
 			this.Delete = (oButton) => { //oButton은 delete버튼이 누른  row에 해당하는 input 태그
 				let targetIdx = oButton.parentNode.parentNode.rowIndex; //delete을 감싸고 있는 input의 부모 tr임. 그것의 rowindex
 				this.myClass.splice(targetIdx - 1, 1);
+				this.createTable();
+			}
+
+			this.CreateNew = (oButton) => { // oButton는 Create 버튼
+				let writtenIdx = oButton.parentNode.parentNode.rowIndex; //row idx : 4
+				let trData = document.querySelector('#classTable').rows[writtenIdx];
+				let obj = {};
+				//input 입력하면 그(tr)데이터에서 td속의 key:value만 뽑아서 obj 안에 저장
+				for (let i = 1; i < this.col.length; i++) { //0 인 ID 자리는 필요없다.
+					let td = trData.querySelectorAll('td')[i];
+					// console.log(td);
+					// console.log(td.childNodes[0].value);
+					if (td.childNodes[0].getAttribute('type') === 'text' || td.childNodes[0].tagName === 'SELECT') {
+						let textValue = td.childNodes[0].value;
+						// console.log(textValue);
+						if (textValue != '') { //textValue 는 우리가 실제로 입력하고 선택한 값이다.
+							obj[this.col[i]] = textValue;
+						} else {
+							obj = '';
+							alert('모든 항목을 입력해야 합니다.');
+							break;
+						}
+					}
+				}
+				obj[this.col[0]] = this.myClass.length + 1; //새 ID값 부여 -> obj의 0q번 인덱스에 담김
+				this.myClass.push(obj);
 				this.createTable();
 			}
 		}
