@@ -136,6 +136,13 @@
 				div.innerHTML = `수강관리 앱`;
 				div.appendChild(table);
 			}
+
+			//삭제 메서드
+			this.Delete = (oButton) => { //oButton은 delete버튼이 누른  row에 해당하는 input 태그
+				let targetIdx = oButton.parentNode.parentNode.rowIndex; //delete을 감싸고 있는 input의 부모 tr임. 그것의 rowindex
+				this.myClass.splice(targetIdx - 1, 1);
+				this.createTable();
+			}
 		}
 		crudApp.createTable();
 	</script>
