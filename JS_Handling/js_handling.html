@@ -169,6 +169,33 @@
 				this.myClass.push(obj);
 				this.createTable();
 			}
+
+			this.Update = (oButton) => {
+				let writtenIdx = oButton.parentNode.parentNode.rowIndex;
+				let trData = document.querySelector('#classTable').rows[writtenIdx];
+
+
+				for (let i = 1; i < this.col.length; i++) { //기존에 입력한 데이터를 가져오기
+					if (i === 2) { //select 태그인 경우
+						let td = trData.querySelectorAll('td')[i];
+						let select = document.createElement('select'); //다시 랜더링
+						select.inerHTML = `<option value = "${td.innerText}">${td.innerText}</option>`;
+						for (let j = 0; j < this.Category.length; j++) {
+							select.innerHTML = select.innerHTML +
+								`<option value="${this.Category[j]}">${this.Category[j]}</option>`;
+						}
+						td.innerText = ''; //기존거는 비우기
+						td.appendChild(select);
+					} else {
+						let td = trData.querySelectorAll('td')[i];
+						let input = document.createElement('input');
+						input.setAttribute('type', 'text');
+						input.setAttribute('value', td.innerText); //이미 있는 값을 그대로 채워줌;
+						td.innerText = ''; //기존거는 비우기
+						td.appendChild(input);
+					}
+				}
+			}
 		}
 		crudApp.createTable();
 	</script>
