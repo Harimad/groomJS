@@ -13,9 +13,32 @@
 	<div id="container"></div>
 
 	<script>
-		let $container = document.querySelector('#container');
-		$container.innerHTML = '수강관리 App';
-		$container.appendChild(table);
+		// let $container = document.querySelector('#container');
+		// $container.innerHTML = '수강관리 App';
+		// $container.appendChild(table);
+
+		let crudApp = new function () { //수강데이터 담을 JSON형식의 배열 만들기
+			this.myClass = [
+				{ ID: '1', Class_Name: '운영체제', Category: '전공필수', Credit: 3 },
+				{ ID: '2', Class_Name: '컴퓨터구조론', Category: '전공선택', Credit: 4 },
+				{ ID: '3', Class_Name: '심리학의 이해', Category: '교양필수', Credit: 2 }
+			];
+
+			this.Category = ['전공필수', '전공선태', '교양필수', '교양선택']; 	//선택할 수 있는 항목 미리 정의
+			this.col = []; 	// Table Header에 담길 데이터를 확장성을위해 배열에 담기
+			this.createTable = () => { // 위 데이터를 토대로 실제로 테이블을 만들어주는 메서드
+				//테이블을 만들고 데이터를 채우는 코드
+				//col에 table header에 해당하는 데이터 (myclass의 key값들)를 넣어주는 코드
+				//비어있는 col 배열에 myClass 배열 속 객체들의 key값들을 넣어줘야 함
+				for (let i = 0; i < this.myClass.length; i++) { //myClass 속 객체들 순회
+					for (let key in this.myClass[i]) { // 각 객체들 속의 key값 순회
+						if (this.col.indexOf(key === -1)) this.col.push(key); 	//key를 col 배열에 담기
+					}
+				}
+				console.log(this.col); //(12) ['ID', 'Class_Name', 'Category', 'Credit', 'ID', 'Class_Name', 'Category', 'Credit', 'ID', 'Class_Name', 'Category', 'Credit']
+			}
+		}
+		crudApp.createTable();
 	</script>
 </body>
 
