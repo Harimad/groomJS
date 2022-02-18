@@ -54,7 +54,7 @@
 				let table = document.createElement('table');
 				table.setAttribute('id', 'classtable');
 
-				let tr = table.insertRow(-1); //-1을 넣으면 table의 마지막 행에 추가
+				let tr = table.insertRow(-1); //-1을 넣으면 table의 마지막 행에 <tr> 요소 추가
 
 				for (let i = 0; i < this.col.length; i++) { //th 작성
 					let th = document.createElement('th');
@@ -68,6 +68,39 @@
 						let tableCell = tr.insertCell(-1);
 						tableCell.innerHTML = this.myClass[i][this.col[j]];
 					}
+
+					//버튼 만들기
+					//update 버튼 만들기
+					this.td = document.createElement('td');
+					tr.appendChild(this.td);
+					let btnUpdate = document.createElement('input');
+					btnUpdate.setAttribute('type', 'button');
+					btnUpdate.setAttribute('value', 'Update');
+					btnUpdate.setAttribute('id', 'Edit' + i); //유일한 id값 지정
+					btnUpdate.setAttribute('style', 'background-color: #44CCEB;');
+					btnUpdate.setAttribute('onclick', 'crudApp.Update(this)'); //클릭시 메서드 실행
+					this.td.appendChild(btnUpdate);
+
+					//save 버튼 만들기
+					tr.appendChild(this.td);
+					let btnSave = document.createElement('input');
+					btnSave.setAttribute('type', 'button');
+					btnSave.setAttribute('value', 'Save');
+					btnSave.setAttribute('id', 'Save' + i); //유일한 id값 지정
+					btnSave.setAttribute('style', 'display: none;');
+					btnSave.setAttribute('onclick', 'crudApp.Save(this)'); //클릭시 메서드 실행
+					this.td.appendChild(btnSave);
+
+					//delete 버튼 만들기
+					this.td = document.createElement('td');
+					tr.appendChild(this.td);
+					let btnDelete = document.createElement('input');
+					btnDelete.setAttribute('type', 'button');
+					btnDelete.setAttribute('value', 'Delete');
+					btnDelete.setAttribute('id', 'Delete' + i); //유일한 id값 지정
+					btnDelete.setAttribute('style', 'background-color: #ED5650;');
+					btnDelete.setAttribute('onclick', 'crudApp.Delete(this)'); //클릭시 메서드 실행
+					this.td.appendChild(btnDelete);
 				}
 
 				let div = document.querySelector('#container');
