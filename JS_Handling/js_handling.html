@@ -32,10 +32,24 @@
 				//비어있는 col 배열에 myClass 배열 속 객체들의 key값들을 넣어줘야 함
 				for (let i = 0; i < this.myClass.length; i++) { //myClass 속 객체들 순회
 					for (let key in this.myClass[i]) { // 각 객체들 속의 key값 순회
-						if (this.col.indexOf(key === -1)) this.col.push(key); 	//key를 col 배열에 담기
+						if (this.col.indexOf(key) === -1) this.col.push(key); 	//key를 col 배열에 담기
 					}
 				}
-				console.log(this.col); //(12) ['ID', 'Class_Name', 'Category', 'Credit', 'ID', 'Class_Name', 'Category', 'Credit', 'ID', 'Class_Name', 'Category', 'Credit']
+
+				let table = document.createElement('table');
+				table.setAttribute('id', 'classtable');
+
+				let tr = table.insertRow(-1); //-1을 넣으면 table의 마지막 행에 추가
+
+				for (let i = 0; i < this.col.length; i++) { //th 작성
+					let th = document.createElement('th');
+					th.innerHTML = this.col[i];
+					tr.appendChild(th);
+				}
+
+				let div = document.querySelector('#container');
+				div.innerHTML = `수강관리 앱`;
+				div.appendChild(table);
 			}
 		}
 		crudApp.createTable();
