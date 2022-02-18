@@ -28,10 +28,6 @@
 	<div id="container"></div>
 
 	<script>
-		// let $container = document.querySelector('#container');
-		// $container.innerHTML = '수강관리 App';
-		// $container.appendChild(table);
-
 		let crudApp = new function () { //수강데이터 담을 JSON형식의 배열 만들기
 			this.myClass = [
 				{ ID: '1', Class_Name: '운영체제', Category: '전공필수', Credit: 3 },
@@ -39,7 +35,7 @@
 				{ ID: '3', Class_Name: '심리학의 이해', Category: '교양필수', Credit: 2 }
 			];
 
-			this.Category = ['전공필수', '전공선태', '교양필수', '교양선택']; 	//선택할 수 있는 항목 미리 정의
+			this.Category = ['전공필수', '전공선택', '교양필수', '교양선택']; 	//선택할 수 있는 항목 미리 정의
 			this.col = []; 	// Table Header에 담길 데이터를 확장성을위해 배열에 담기
 			this.createTable = () => { // 위 데이터를 토대로 실제로 테이블을 만들어주는 메서드
 				//테이블을 만들고 데이터를 채우는 코드
@@ -47,7 +43,9 @@
 				//비어있는 col 배열에 myClass 배열 속 객체들의 key값들을 넣어줘야 함
 				for (let i = 0; i < this.myClass.length; i++) { //myClass 속 객체들 순회
 					for (let key in this.myClass[i]) { // 각 객체들 속의 key값 순회
-						if (this.col.indexOf(key) === -1) this.col.push(key); 	//key를 col 배열에 담기
+						if (this.col.indexOf(key) === -1) {
+							this.col.push(key); 	//key를 col 배열에 담기
+						}
 					}
 				}
 
@@ -61,7 +59,7 @@
 					th.innerHTML = this.col[i];
 					tr.appendChild(th);
 				}
-
+				//table에 데이터 넣어주기
 				for (let i = 0; i < this.myClass.length; i++) {  //td작성
 					tr = table.insertRow(-1); // table에 일단 한 행을 추가
 					for (let j = 0; j < this.col.length; j++) { // table header 길이 만큼 순회하며 매칭되는 데이터 갖고오기
@@ -102,6 +100,37 @@
 					btnDelete.setAttribute('onclick', 'crudApp.Delete(this)'); //클릭시 메서드 실행
 					this.td.appendChild(btnDelete);
 				}
+
+				// 입력 행 추가
+				tr = table.insertRow(-1);
+				for (let k = 0; k < this.col.length; k++) {
+					let newCell = tr.insertCell(-1);
+					if (k >= 1) {
+						if (k == 2) { // 선택 항목 만들어 주기
+							let select = document.createElement('select');
+							select.innerHTML = `<option value=""></option>`;
+							for (let l = 0; l < this.Category.length; l++) {//선택항목 만들어주기
+								select.innerHTML = select.innerHTML + `<option value="${this.Category[l]}">${this.Category[l]}</option>`
+							}
+							newCell.appendChild(select);
+						} else {
+							textBox = document.createElement('input');
+							textBox.setAttribute('type', 'text');
+							textBox.setAttribute('value', '');
+							newCell.appendChild(textBox);
+						}
+					}
+				}
+				//create 버튼 만들기
+				this.td = document.createElement('td');
+				tr.appendChild(this.td);
+				let btnCreate = document.createElement('input');
+				btnCreate.setAttribute('type', 'button');
+				btnCreate.setAttribute('value', 'Create');
+				btnCreate.setAttribute('id', 'Create'); //유일한 id값 지정
+				btnCreate.setAttribute('style', 'background-color: #207DD1;');
+				btnCreate.setAttribute('onclick', 'crudApp.CreateNew(this)'); //클릭시 메서드 실행
+				this.td.appendChild(btnCreate);
 
 				let div = document.querySelector('#container');
 				div.innerHTML = `수강관리 앱`;
