@@ -6,6 +6,21 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>수강관리 앱</title>
+	<style>
+		.title {
+			font-weight: bold;
+			font-size: 30px;
+		}
+
+		table,
+		th,
+		td {
+			border: solid 1px #DDD;
+			border-collapse: collapse;
+			padding: 2px 3px;
+			text-align: center;
+		}
+	</style>
 </head>
 
 <body>
@@ -45,6 +60,14 @@
 					let th = document.createElement('th');
 					th.innerHTML = this.col[i];
 					tr.appendChild(th);
+				}
+
+				for (let i = 0; i < this.myClass.length; i++) {  //td작성
+					tr = table.insertRow(-1); // table에 일단 한 행을 추가
+					for (let j = 0; j < this.col.length; j++) { // table header 길이 만큼 순회하며 매칭되는 데이터 갖고오기
+						let tableCell = tr.insertCell(-1);
+						tableCell.innerHTML = this.myClass[i][this.col[j]];
+					}
 				}
 
 				let div = document.querySelector('#container');
