@@ -46,6 +46,18 @@ $(document).ready(function () {
       }, 10); //10ms마다 실행
     }
   }
+  //for test
+  //timer();
 
-  //시작 버튼 함수
+  //시작 버튼 함수 - 누르면 이 클래스가 없어짐
+  $('.startbutton').click(function () {
+    $('.startbutton').fadeToggle('slow', function () {
+      gameOn = true;
+      timer();
+      $('.space').mouseenter(function () {
+        endgame(); //게임끝내는 함수 - space로 마우스가 들어가면 게임 끝내라
+      });
+      createCircle(); //공을 생성해주는 함수
+    });
+  });
 });
