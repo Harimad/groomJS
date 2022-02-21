@@ -55,46 +55,96 @@ $(document).ready(function () {
       gameOn = true;
       timer();
       $('.space').mouseenter(function () {
-        endgame(); //게임끝내는 함수 - space로 마우스가 들어가면 게임 끝내라
+        //endgame(); //게임끝내는 함수 - space로 마우스가 들어가면 게임 끝내라
       });
       createCircle(); //공을 생성해주는 함수
     });
   });
-});
 
-//공을 생성해주는 함수
-function createCircle() {
-  circleNumber++; //공 개수 하나 증가
+  //공을 생성해주는 함수
+  function createCircle() {
+    circleNumber++; //공 개수 하나 증가
 
-  //small medium large 셋 중 하나를 랜덤하게 생성
-  //1~3 까지 정수 중 하나를 랜덤으로 생성
-  let randomOneThree = Math.floor(Math.random() * 3) + 1; //1 or 2 or 3
+    //small medium large 셋 중 하나를 랜덤하게 생성
+    //1~3 까지 정수 중 하나를 랜덤으로 생성
+    let randomOneThree = Math.floor(Math.random() * 3) + 1; //1 or 2 or 3
 
-  if (randomOneThree === 1) {
-    let circleChoice = 'small';
-  } else if (randomOneThree === 2) {
-    let circleChoice = 'medium';
-  } else if (randomOneThree === 3) {
-    let circleChoice = 'large';
+    if (randomOneThree === 1) {
+      var circleChoice = 'small';
+    } else if (randomOneThree === 2) {
+      var circleChoice = 'medium';
+    } else if (randomOneThree === 3) {
+      var circleChoice = 'large';
+    }
+
+    //공의 id 값을 지정
+    let circleName = 'circle' + circleNumber;
+
+    //랜덤 circleChoice에 맞는 color, 지름, 반지름, speed 변수에 담기
+    let circleColor = circleTypes[circleChoice][0];
+    let circleSize = circleTypes[circleChoice][1];
+    let circleRadius = circleTypes[circleChoice][2];
+    let circleSpeed = circleTypes[circleChoice][3];
+
+    //생성된 공은 각기 다른 크기 가짐. 공이 움직일 수 있는 범위(가로, 세로) 지정
+    let moveableWidth = $('body').width() - circleSize; //공의 지름만큼 뺀 나머지 만큼만 화면에서 움직 일 수 있다.
+    let moveableHeight = $('body').height() - circleSize;
+
+    //공이 움직일 수 있는 가로 길이 moveableWidth
+    //공이 찍힐 수 있는 가로 좌표 0 ~ moveableWidth이다. 그러므로 아래 처럼 Math.random()을 곱해줘서 랜덤값을 취한다.
+
+    //공의 초기 시작 좌표
+    let circlePositionLeft = (moveableWidth * Math.random()).toFixed(); //(공 움직일 수 있는 거리 x 0~1사이 랜덤) 그리고 소수점버림
+    let circlePositionTop = (moveableHeight * Math.random()).toFixed();
+
+    //html에 위의 값들 찍어주기
+    let newCircle = `<div class='circle' id=${circleName}></div>`;
+    $('body').append(newCircle);
+
+    //css값 주기
+    $('#' + circleName).css({
+      'background-color': circleColor,
+      'width': circleSize + 'vmin',
+      'height': circleSize + 'vmin',
+      'border-radius': circleRadius + 'vmin',
+      'top': circlePositionTop + 'px',
+      'left': circlePositionLeft + 'px',
+    });
+
+    // 여기 위 까지가 랜덤 공 생성 ~ 속성지정까지 코드이다
+
+    //이제 공과 마우스가 맞닿으면 끝나도록 한다.
+    //1ms 마다 반복하며 마우스와의 거리 계산하는 함수
+    function timeCirclePosition(circleTrackId) {
+      setTimeout(function () {
+        let currentCirclePosition = $(circleTrackId).position();
+        let calculateRadius = parseInt($(circleTrackId).css('width')) * 0.5;
+
+        //점과 점 사이 거리 수학계산
+        let distanceX = mouseX - (currentCirclePosition.left + calculateRadius); //공의 어느 부분이라도 맞닿는곳 계산
+        let distanceY = mouseY - (currentCirclePosition.top + calculateRadius);
+        //마우스와 공이 맞 닿으면
+        if (
+          Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2)) <=
+          calculateRadius
+        ) {
+          //부딪힌 공 빨간색으로 표시
+          $(circleTrackId).removeClass('circle').addClass('redcircle');
+          $(circleTrackId).css('background-color', 'red');
+
+          console.log('게임 끝');
+          // endgame();
+        }
+        timeCirclePosition(circleTrackId); //반복실행
+      }, 1);
+    }
+    timeCirclePosition('#' + circleName);
+
+    //3초에 한번 공 랜덤 생성
+    setTimeout(function () {
+      if (gameOn == true) {
+        createCircle();
+      }
+    }, 3000);
   }
-
-  //공의 id 값을 지정
-  let circleName = 'circle' + circleNumber;
-
-  //랜덤 circleChoice에 맞는 color, 지름, 반지름, speed 변수에 담기
-  let circleColor = circleTypes[circleChoice][0];
-  let circleSize = circleTypes[circleChoice][1];
-  let circleRadius = circleTypes[circleChoice][2];
-  let circleSpeed = circleTypes[circleChoice][3];
-
-  //생성된 공은 각기 다른 크기 가짐. 공이 움직일 수 있는 범위(가로, 세로) 지정
-  let moveableWidth = $('body').width - circleSize; //공의 지름만큼 뺀 나머지 만큼만 화면에서 움직 일 수 있다.
-  let moveableHeight = $('body').Height - circleSize;
-
-  //공이 움직일 수 있는 가로 길이 moveableWidth
-  //공이 찍힐 수 있는 가로 좌표 0 ~ moveableWidth이다. 그러므로 아래 처럼 Math.random()을 곱해줘서 랜덤값을 취한다.
-
-  //공의 초기 시작 좌표
-  let circlePositionLeft = (moveableWidth * Math.random()).toFixed(); //(공 움직일 수 있는 거리 x 0~1사이 랜덤) 그리고 소수점버림
-  let circlePositionTop = (moveableHeight * Math.random()).toFixed();
-}
+});
