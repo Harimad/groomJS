@@ -1,4 +1,4 @@
-$(documnet).ready(function () {
+$(document).ready(function () {
   //데이터 정의
 
   //공의 개수
@@ -27,4 +27,25 @@ $(documnet).ready(function () {
   //마우스 좌표
   let mouseX;
   let mouseY;
+
+  //마우스 움직임을 좌표에 담아주는 함수
+  $('body').mousemove(function (event) {
+    mouseX = event.pageX;
+    mouseY = event.pageY;
+  });
+
+  //타이머 함수
+  function timer() {
+    if (gameOn == true) {
+      //0.01초 (10ms) 마다 t 값을 0.01 증가
+      //증가된 t 값을 html(.timer)에 찍어줌
+      setTimeout(function () {
+        t = t + 0.01;
+        $('.timer').html(`<h1><center>${t.toFixed(2)}</center></h1>`);
+        timer(); // 반복실행
+      }, 10); //10ms마다 실행
+    }
+  }
+
+  //시작 버튼 함수
 });
