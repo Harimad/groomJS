@@ -98,7 +98,7 @@ $(document).ready(function () {
     let circlePositionTop = (moveableHeight * Math.random()).toFixed();
 
     //html에 위의 값들 찍어주기
-    let newCircle = `<div class='circle' id=${circleName}></div>`;
+    let newCircle = `<div class='circle' id="${circleName}"></div>`;
     $('body').append(newCircle);
 
     //css값 주기
@@ -120,9 +120,9 @@ $(document).ready(function () {
         let currentCirclePosition = $(circleTrackId).position();
         let calculateRadius = parseInt($(circleTrackId).css('width')) * 0.5;
 
-        //점과 점 사이 거리 수학계산
-        let distanceX = mouseX - (currentCirclePosition.left + calculateRadius); //공의 어느 부분이라도 맞닿는곳 계산
-        let distanceY = mouseY - (currentCirclePosition.top + calculateRadius);
+        //점과 점 사이 거리 수학계산 - 공의 어느 부분이라도 맞닿는곳 계산
+        let distanceX = mouseX - (currentCirclePosition.left + calculateRadius); // left는 x축 방향으로 현재 화면 상에 떨어진 거리, top은 공이 y축 방향으로 현재 화면 상에 떨어진 거리
+        let distanceY = mouseY - (currentCirclePosition.top + calculateRadius); // distanceX,Y는 공의 중심과 마우스와의 거리가 아닌, 공 자체와 마우스와의 거리이다. (mouseX,mouseY에 반지름(calculatedRadius) 만큼 더한 값 뺏기 때문이다.)
         //마우스와 공이 맞 닿으면
         if (
           Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2)) <=
@@ -140,11 +140,33 @@ $(document).ready(function () {
     }
     timeCirclePosition('#' + circleName);
 
+    animateCircle(circleName, circleSpeed, circleSize);
+
     //3초에 한번 공 랜덤 생성
     setTimeout(function () {
       if (gameOn == true) {
         createCircle();
       }
     }, 3000);
+  }
+
+  function animateCircle(circleId, speed, circleSize) {
+    //animate() - 위치를 이동시키는 함수
+    let moveableWidth = $('body').width() - circleSize;
+    let moveableHeight = $('body').height() - circleSize;
+    let circleMoveLeft = (moveableWidth * Math.random()).toFixed();
+    let circleMoveTop = (moveableHeight * Math.random()).toFixed();
+
+    //jquery animate 함수 인자 참조(css객체, duration, 콜백함수)
+    $('#' + circleId).animate(
+      {
+        left: circleMoveLeft,
+        top: circleMoveTop,
+      },
+      speed,
+      function () {
+        animateCircle(circleId, speed, circleSize); //계속 반복
+      }
+    );
   }
 });
