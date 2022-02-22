@@ -55,7 +55,7 @@ $(document).ready(function () {
       gameOn = true;
       timer();
       $('.space').mouseenter(function () {
-        //endgame(); //게임끝내는 함수 - space로 마우스가 들어가면 게임 끝내라
+        endgame(); //게임끝내는 함수 - space로 마우스가 들어가면 게임 끝내라
       });
       createCircle(); //공을 생성해주는 함수
     });
@@ -133,7 +133,7 @@ $(document).ready(function () {
           $(circleTrackId).css('background-color', 'red');
 
           console.log('게임 끝');
-          // endgame();
+          endgame();
         }
         timeCirclePosition(circleTrackId); //반복실행
       }, 1);
@@ -169,4 +169,88 @@ $(document).ready(function () {
       }
     );
   }
+
+  //게임 오버 함수
+  function endgame() {
+    if (gameOn == true) {
+      gameOn = false;
+      updateScores(t); //시간을 인자로 넘겨줌
+      $('.circle').remove(); //나머지 원은 지우기
+      $('.redcircle').stop(); //내가 건드린 원은 멈추기
+    }
+  }
+
+  let resetButton = `<div class='resetButton center'><h2>Play Again</h2></div>`;
+  let highScore1 = 0.0;
+  let highScore2 = 0.0;
+  let highScore3 = 0.0;
+  let highScore4 = 0.0;
+  let highScore5 = 0.0;
+  //update score 함수- 시간을 인자로 넘겨줌
+  function updateScores(newScore) {
+    //방금 플레이에서 얻은 점수는 빨간색으로 표시할 예정
+    let redScore;
+    //newScore가 highScore1 보다 높은 경우
+    if (newScore > highScore1) {
+      redScore = 'score1';
+      highScore5 = highScore4;
+      highScore4 = highScore3;
+      highScore3 = highScore2;
+      highScore1 = newScore;
+    }
+    //newScore가 highScore2 보다 높은 경우
+    else if (newScore > highScore2) {
+      redScore = 'score2';
+      highScore5 = highScore4;
+      highScore4 = highScore3;
+      highScore3 = highScore2;
+      highScore2 = newScore;
+    }
+    //newScore가 highScore3 보다 높은 경우
+    else if (newScore > highScore3) {
+      redScore = 'score3';
+      highScore5 = highScore4;
+      highScore4 = highScore3;
+      highScore3 = newScore;
+    }
+    //newScore가 highScore4 보다 높은 경우
+    else if (newScore > highScore4) {
+      redScore = 'score4';
+      highScore5 = highScore4;
+      highScore4 = newScore;
+    }
+    //newScore가 highScore5 보다 높은 경우
+    else if (newScore > highScore5) {
+      redScore = 'score5';
+      highScore5 = newScore;
+    }
+
+    let highScorePlace1 = `
+		<div class='score center' id='score1'><h2>${highScore1.toFixed(2)}</h2></div>`;
+    let highScorePlace2 = `
+		<div class='score center' id='score2'><h2>${highScore2.toFixed(2)}</h2></div>`;
+    let highScorePlace3 = `
+		<div class='score center' id='score3'><h2>${highScore3.toFixed(2)}</h2></div>`;
+    let highScorePlace4 = `
+		<div class='score center' id='score4'><h2>${highScore4.toFixed(2)}</h2></div>`;
+    let highScorePlace5 = `
+		<div class='score center' id='score5'><h2>${highScore5.toFixed(2)}</h2></div>`;
+
+    //highScorePlace1 ~ highScorePlace5 를 append 하기
+    $('#highscores').append(
+      highScorePlace1,
+      highScorePlace2,
+      highScorePlace3,
+      highScorePlace4,
+      highScorePlace5,
+      resetButton
+    );
+    $('#' + redScore).css('color', 'red');
+    $('#highscores').toggle(); //안보이는 건 -> 보이게 , 보이는 건 -> 안보이게
+    // $('.resetButton').click(function () {
+    //   gameReset();
+    // });
+  }
+
+  //게임 리셋 함수
 });
