@@ -186,6 +186,7 @@ $(document).ready(function () {
   let highScore3 = 0.0;
   let highScore4 = 0.0;
   let highScore5 = 0.0;
+
   //update score 함수- 시간을 인자로 넘겨줌
   function updateScores(newScore) {
     //방금 플레이에서 얻은 점수는 빨간색으로 표시할 예정
@@ -247,10 +248,20 @@ $(document).ready(function () {
     );
     $('#' + redScore).css('color', 'red');
     $('#highscores').toggle(); //안보이는 건 -> 보이게 , 보이는 건 -> 안보이게
-    // $('.resetButton').click(function () {
-    //   gameReset();
-    // });
+    $('.resetButton').click(function () {
+      gameReset();
+    });
   }
 
   //게임 리셋 함수
+  function gameReset() {
+    $('#highscores').fadeToggle(100, function () {
+      t = 0; //시간 초기화
+      $('.timer').html(`<h1><center>${t.toFixed(2)}</center></h1>`);
+      $('.resetButton').remove();
+      $('.score').remove();
+      $('.startbutton').toggle();
+      $('.redcircle').remove();
+    });
+  }
 });
