@@ -43,13 +43,14 @@ function buildTypedUrlList() {
 		for (let i = 0; i < historyItems.length; ++i) {
 			let url = historyItems[i].url;
 
+			//클로저 <= url 방문정보중에 "typed"에 대한 정보를 얻기위해 씀
 			let processVisitsWithUrl = function(url) {
 				return function(visitItems) {
 					//url 중에서 유저가 직접 입력해서 들어간 url을 찾아서 세주는 함수
-					processVisits(url, visitItems);
+					processVisits(url, visitItems); //url과 visitItems를 바인딩 시켜줌
 				};
 			};
-			//url에 대한 세부 방문 정보
+			//url에 대한 세부 방문 정보(방문방법)
 			chrome.history.getVisits({url: url}, processVisitsWithUrl(url));
 			numRequestsOutstanding++;
 		}
@@ -59,7 +60,24 @@ function buildTypedUrlList() {
 		}
 	})
 
+	//url: 반복횟수
+	let urlToCount = {};
+
 	//url 중에서 유저가 직접 입력해서 들어간 url을 찾아서 세주는 함수
+	let processVisits = function(url, visitItems) {
+		for (let i = 0, ie = visitItems.length; i < ie; ++i) {
+			if (visitItems[i].transition != 'typed') {
+				continue;
+			}
+			if (!urlToCount[url]) {
+				urlToCount[url] = 0;
+			}
+			urlToCount[url]++;
+		}
+		if (!--numRequestsOutstanding) {
+			//종료. 최종 배열 만들기 함수 호출
+		}
+	}
 
 	//배열 만들기
 
