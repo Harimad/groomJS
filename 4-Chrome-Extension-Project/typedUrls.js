@@ -24,6 +24,26 @@ function buildPopupDom(divName, data) {
 		let li = document.createElement('li');
 		li.appendChild(a);
 		ul.appendChild(li);
-
 	}
 }
+
+//가장 핵심 함수
+//Top 10 Visited url 배열
+function buildTypedUrlList() {
+	//History 를 찾기
+
+	//해당하는 url 찾기
+
+	//그 중에 유저가 직접 입력해서 방문한 url 찾기
+
+	//가장 많이 쓰인 url 찾기
+
+	//배열 만들기
+
+	//buildPopupDom 호출
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+	//Top 10 visited url 배열을 만들어주는 함수
+	buildTypedUrlList('typedUrl_div'); //buildPopupDom을 이 안에서 호출
+})
