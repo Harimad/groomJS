@@ -30,13 +30,36 @@ function buildPopupDom(divName, data) {
 //가장 핵심 함수
 //Top 10 Visited url 배열
 function buildTypedUrlList() {
+	let oneWeek = 1000 * 60 * 60 * 24 * 7;
+	let oneWeekAgo = (new Date).getTime() - oneWeek; //일주일 전
+
+	let numRequestsOutstanding = 0;
 	//History 를 찾기
+	chrome.history.search({
+		startTime: oneWeekAgo, //1주일 전 시각(ms)
+		text: ''
+	}, function(historyItems) {
+		//해당하는 url 찾기
+		for (let i = 0; i < historyItems.length; ++i) {
+			let url = historyItems[i].url;
 
-	//해당하는 url 찾기
+			let processVisitsWithUrl = function(url) {
+				return function(visitItems) {
+					//url 중에서 유저가 직접 입력해서 들어간 url을 찾아서 세주는 함수
+					processVisits(url, visitItems);
+				};
+			};
+			//url에 대한 세부 방문 정보
+			chrome.history.getVisits({url: url}, processVisitsWithUrl(url));
+			numRequestsOutstanding++;
+		}
 
-	//그 중에 유저가 직접 입력해서 방문한 url 찾기
+		if(!numRequestsOutstanding) {
+			//종료 함수
+		}
+	})
 
-	//가장 많이 쓰인 url 찾기
+	//url 중에서 유저가 직접 입력해서 들어간 url을 찾아서 세주는 함수
 
 	//배열 만들기
 
