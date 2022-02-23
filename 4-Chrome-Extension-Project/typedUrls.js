@@ -29,7 +29,7 @@ function buildPopupDom(divName, data) {
 
 //가장 핵심 함수
 //Top 10 Visited url 배열
-function buildTypedUrlList() {
+function buildTypedUrlList(divName) {
 	let oneWeek = 1000 * 60 * 60 * 24 * 7;
 	let oneWeekAgo = (new Date).getTime() - oneWeek; //일주일 전
 
@@ -76,12 +76,24 @@ function buildTypedUrlList() {
 		}
 		if (!--numRequestsOutstanding) {
 			//종료. 최종 배열 만들기 함수 호출
+			onAllVisitsProceed();
 		}
 	}
 
 	//배열 만들기
+	let onAllVisitsProceed = function() {
+		urlArray = [];
+		for (let url in urlToCount) {
+			urlArray.push(url);
+		}
 
-	//buildPopupDom 호출
+		urlArray.sort(function(a, b) {
+			return urlToCount[b] - urlToCount[a];
+		});
+		//buildPopupDom 호출
+		buildPopupDom(divName, urlArray.slice(0, 10));
+	}
+
 }
 
 document.addEventListener('DOMContentLoaded', function() {
